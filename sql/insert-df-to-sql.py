@@ -32,47 +32,37 @@ except pymysql.Error as e:
 # get cursor
 cur = conn.cursor()
 
+""" create table """
 # cur.execute("CREATE TABLE grade2(name TEXT, phone TEXT, address TEXT)")
 
 """delete"""
 # DELETE FROM `real_estate`.`grade` WHERE  `name`='JM' AND `phone`='1531' AND `address`='Mapo' LIMIT 1;
 
 """insert"""
-# sql = """
-# INSERT INTO real_estate.grade (name, phone, address)VALUES (%s, %s, %s)
-# """
-# for i in range(1, 10):
-#     try:
-#         cur.execute(sql, ("JM "+str(i), 1234, "MAPO"))
-#     except pymysql.Error as e:
-#         print(f"Error insert query: {e}")
-#         sys.exit(1)
-
+sql = """
+INSERT INTO real_estate.grade2 (name, phone, address)VALUES (%s, %s, %s)
+"""
+for i in range(1, 10):
+    try:
+        cur.execute(sql, ("JM "+str(i), 1234+i, "MAPO"))
+        conn.commit()
+    except pymysql.Error as e:
+        print(f"Error insert query: {e}")
+        conn.close()
 
 
 """ update """
-sql = """
-UPDATE real_estate.grade 
-SET address = 'NAMGU'
-WHERE address = 'MAPO'
-"""
-try:
-    cur.execute(sql)
-    conn.commit()
-except pymysql.Error as e:
-    print(f"Error update query: {e}")
-    sys.exit(1)
-
-
-""" select - fetchall > List """
-cur.execute("SELECT * FROM real_estate.grade")
-rows = cur.fetchall()
-for row in rows:
-    print(row)
-
-
-# close
-conn.close()
+# sql = """
+# UPDATE real_estate.grade
+# SET address = 'NAMGU'
+# WHERE address = 'MAPO'
+# """
+# try:
+#     cur.execute(sql)
+#     conn.commit()
+# except pymysql.Error as e:
+#     print(f"Error update query: {e}")
+#     conn.close()
 
 
 
