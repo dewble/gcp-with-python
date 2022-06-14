@@ -4,7 +4,19 @@ import pandas as pd
 import settings as st
 
 
+""" csv 파일로부터 dateframe 가져오기 """
+# df = pd.read_csv("C:/Users/user/Desktop/workspace/python/gcp-with-python/sql/아파트(매매)__실거래가_20050901_20060831.csv", encoding="utf-8-sig", error_bad_lines=False)
+
+# print(df.head())
+# print(df.info())
+# print(df.describe())
+
+
+# df.to_sql(name="real_estate", con=conn, index=False)
+
+
 """ MySQL Connector using pymysql"""
+# connect
 try:
     conn = pymysql.connect(
         user=st.USER,
@@ -17,24 +29,49 @@ except pymysql.Error as e:
     print(f"Error connecting to mysql db: {e}")
     sys.exit(1)
 
-
 # get cursor
 cur = conn.cursor()
 
-""" csv 파일로부터 dateframe 가져오기 """
-df = pd.read_csv("C:/Users/user/Desktop/workspace/python/gcp-with-python/sql/아파트(매매)__실거래가_20050901_20060831.csv", encoding="utf-8-sig", error_bad_lines=False)
+# cur.execute("CREATE TABLE grade2(name TEXT, phone TEXT, address TEXT)")
 
-# print(df.head())
-# print(df.info())
-# print(df.describe())
+"""delete"""
+# DELETE FROM `real_estate`.`grade` WHERE  `name`='JM' AND `phone`='1531' AND `address`='Mapo' LIMIT 1;
+
+"""insert"""
+# sql = """
+# INSERT INTO real_estate.grade (name, phone, address)VALUES (%s, %s, %s)
+# """
+# for i in range(1, 10):
+#     try:
+#         cur.execute(sql, ("JM "+str(i), 1234, "MAPO"))
+#     except pymysql.Error as e:
+#         print(f"Error insert query: {e}")
+#         sys.exit(1)
 
 
-df.to_sql(name="real_estate", con=conn, index=False)
+
+""" update """
+sql = """
+UPDATE real_estate.grade 
+SET address = 'NAMGU'
+WHERE address = 'MAPO'
+"""
+try:
+    cur.execute(sql)
+    conn.commit()
+except pymysql.Error as e:
+    print(f"Error update query: {e}")
+    sys.exit(1)
 
 
-# cur.execute("CREATE TABLE grade(name TEXT, phone TEXT, address TEXT)")
-cur.execute("select * from real_estate")
-# conn.commit()
+""" select - fetchall > List """
+cur.execute("SELECT * FROM real_estate.grade")
+rows = cur.fetchall()
+for row in rows:
+    print(row)
+
+
+# close
 conn.close()
 
 
